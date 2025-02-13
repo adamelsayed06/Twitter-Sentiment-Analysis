@@ -17,4 +17,18 @@ class TwitterClient():
         except:
             print("Error: Authentication Failed")
 
+    def get_tweets(self, query): #default count of tweets is 15, can be set as additional param
+        tweets = [] #initalize the tweets we get fetch to an empty array
+
+        try:
+            fetched_tweets = self.api.search(query=query) #api requires explicit naming of parameters
+            for fetched_tweet in fetched_tweets:
+                tweets.append(fetched_tweet.text) #append text content of every fetched tweet to our array
+            return tweets
+        except tweepy.TweepyException as e:
+            print(f"Error: {str(e)}")
+            return tweets
+        
+    
+
 
