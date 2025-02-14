@@ -23,7 +23,7 @@ class TwitterClient():
         try:
             fetched_tweets = self.api.search(query=query) #api requires explicit naming of parameters
             for fetched_tweet in fetched_tweets:
-                tweets.append(fetched_tweet.text) #append text content of every fetched tweet to our array
+                tweets.append(fetched_tweet.text) #append text content/attribute of every fetched tweet to our array
             return tweets
         except tweepy.TweepyException as e:
             print(f"Error: {str(e)}")
