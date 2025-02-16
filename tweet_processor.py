@@ -10,4 +10,4 @@ class TweetProcessor:
 
     def get_tweet_sentiment(self,tweet):
         analysis = TextBlob(self.clean_tweet(tweet)) #cleaning the tweet and passing it to TextBlob for Sentiment Analysis
-
+        return analysis.sentiment.polarity

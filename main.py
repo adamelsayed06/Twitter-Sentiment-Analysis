@@ -6,11 +6,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-@app.route('/')
-def home():
-    return jsonify([])
 
-@app.route('/get_tweets')
+@app.route('/get_tweets', methods = ['GET'])
 def get_tweets():
     api = TwitterClient()
     tweet_processor = TweetProcessor()
@@ -21,14 +18,21 @@ def get_tweets():
     if not tweets:
         return jsonify({"error": "no tweets found"}) #error message
     
-    analyzed_tweets = {} #e.g. "I hate Donald Trump" : -0.78
+    analyzed_tweets = []
+    #{text: I hate donald trump, score -0.9}
+    #{text: I love donald trump, score 0.9}
 
     for tweet in tweets:
-        analyzed_tweets[tweet["text"]] = tweet_processor.get_tweet_sentiment(tweet["text"]) #tweet is json object and we want the value of the 'text' key
+        analyzed_tweets.append(
+            {
+            "text": tweet["text"],
+             "score": tweet_processor.get_tweet_sentiment(tweet["text"])
+             })
+         #tweet is json object and we want the value of the 'text' key
 
     return jsonify(analyzed_tweets)
 
-@app.route('get_tweets_score')
+@app.route('/get_tweets_score', methods = ['GET'])
 def get_tweets_score():
     api = TwitterClient()
     tweet_processor = TweetProcessor()
@@ -40,7 +44,8 @@ def get_tweets_score():
 
     for tweet in tweets:
         averageScore += tweet_processor.get_tweet_sentiment(tweet)
-    averageScore *= 10
+    averageScore /= len(tweets)
+    averageScore *= 100
 
-    return{ 'averageScore' : averageScore }
+    return jsonify({'averageScore' : averageScore })
 
