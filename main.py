@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 @app.route('/')
 def home():
-    return []
+    return jsonify([])
 
 @app.route('/get_tweets')
 def get_tweets():
@@ -19,24 +19,14 @@ def get_tweets():
     tweets = api.get_tweets(search)
 
     if not tweets:
-        return jsonify #error message
+        return jsonify({"error": "no tweets found"}) #error message
     
-    analyzed_tweets = [{}]
-    positiveTweets = {}
-    negativeTweets = {}
+    analyzed_tweets = {} #e.g. "I hate Donald Trump" : -0.78
 
     for tweet in tweets:
-        analyzed_tweets[tweet] = tweet_processor.get_tweet_sentiment(tweet)
+        analyzed_tweets[tweet["text"]] = tweet_processor.get_tweet_sentiment(tweet["text"]) #tweet is json object and we want the value of the 'text' key
 
-    for analyzed_tweet in analyzed_tweets:
-        if(analyzed_tweets[analyzed_tweet] > 0):
-            positiveTweets.update({analyzed_tweet : 'positive'})
-        else:
-            negativeTweets.update({analyzed_tweet : 'negative'})
-
-    response = {**positiveTweets, **negativeTweets}
-
-    return jsonify(response)
+    return jsonify(analyzed_tweets)
 
 @app.route('get_tweets_score')
 def get_tweets_score():
