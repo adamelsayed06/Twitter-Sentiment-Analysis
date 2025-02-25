@@ -1,6 +1,6 @@
-from twitter_client import TwitterClient
-from tweet_processor import TweetProcessor
-import config
+from backend.twitter_client import TwitterClient
+from backend.tweet_processor import TweetProcessor
+import backend.config as config
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
